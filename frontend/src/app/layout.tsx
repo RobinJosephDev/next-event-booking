@@ -7,19 +7,15 @@ import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "Event Booking App",
-  description: "Fullstack Event Booking App (Next.js + Node.js + PostgreSQL)",
+  description: "Fullstack Event Booking App",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.ico", // main favicon
     shortcut: "/favicon.ico",
-    apple: "/logo.png",
+    apple: "/favicon.ico", // use .ico for all browsers
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-gray-50 text-gray-900">
