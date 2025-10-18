@@ -16,7 +16,7 @@ const AdminPage = () => {
   const [events, setEvents] = useState<Event[]>([]);
 
   const fetchEvents = async () => {
-    const res = await fetch("/api/events");
+    const res = await fetch("http://localhost:5000/api/events");
     const data = await res.json();
     setEvents(data);
   };
@@ -26,7 +26,7 @@ const AdminPage = () => {
   }, []);
 
   const handleAddEvent = async (data: EventFormData) => {
-    await fetch("/api/events", {
+    await fetch("http://localhost:5000/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -36,7 +36,6 @@ const AdminPage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
         <h2 className="text-xl font-semibold mb-2">Add New Event</h2>
@@ -51,7 +50,6 @@ const AdminPage = () => {
           ))}
         </div>
       </div>
-      <Footer />
     </>
   );
 };

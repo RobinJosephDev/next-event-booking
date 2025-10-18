@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -21,7 +20,7 @@ const EventDetailPage = () => {
   const [event, setEvent] = useState<Event | null>(null);
 
   const fetchEvent = async () => {
-    const res = await fetch(`/api/events/${id}`);
+    const res = await fetch(`http://localhost:5000/api/events/${id}`);
     const data = await res.json();
     setEvent(data);
   };
@@ -34,7 +33,6 @@ const EventDetailPage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="p-4 max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-2">{event.title}</h1>
         <p className="mb-2">{event.description}</p>
@@ -43,7 +41,6 @@ const EventDetailPage = () => {
         <p>Price: ${event.price}</p>
         <p>Capacity: {event.capacity}</p>
       </div>
-      <Footer />
     </>
   );
 };

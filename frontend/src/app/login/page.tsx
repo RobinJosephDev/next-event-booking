@@ -11,7 +11,7 @@ const LoginPage = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/auth/login", {
+    const res = await fetch("http://localhost:5000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -27,7 +27,6 @@ const LoginPage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="p-4 max-w-md mx-auto">
         <h1 className="text-2xl font-bold mb-4">Login</h1>
         <form onSubmit={handleLogin} className="space-y-4">
@@ -52,7 +51,6 @@ const LoginPage = () => {
           </button>
         </form>
       </div>
-      <Footer />
     </>
   );
 };

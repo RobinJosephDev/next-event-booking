@@ -12,7 +12,7 @@ const RegisterPage = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/auth/register", {
+    const res = await fetch("http://localhost:5000/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
@@ -28,7 +28,6 @@ const RegisterPage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="p-4 max-w-md mx-auto">
         <h1 className="text-2xl font-bold mb-4">Register</h1>
         <form onSubmit={handleRegister} className="space-y-4">
@@ -64,7 +63,6 @@ const RegisterPage = () => {
           </button>
         </form>
       </div>
-      <Footer />
     </>
   );
 };
