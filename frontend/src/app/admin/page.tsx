@@ -1,7 +1,7 @@
+"use client";
+
 import EventForm, { EventFormData } from "../../components/EventForm";
 import { useState, useEffect } from "react";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
 
 interface Event {
   id: number;

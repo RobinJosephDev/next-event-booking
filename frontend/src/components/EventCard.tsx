@@ -13,9 +13,17 @@ export default function EventCard({ event }: Props) {
       <h2 className="text-lg font-semibold mb-2">{event.title}</h2>
       <p className="text-gray-500 text-sm mb-2">{formatDate(event.date)}</p>
       <p className="text-sm text-gray-600 mb-4">{event.venue}</p>
-      <Link href={`/events/${event.id}`} className="btn-primary text-sm">
-        View Details
-      </Link>
+      <div className="flex justify-between">
+        <Link href={`/events/${event.id}`} className="btn-primary text-sm">
+          View Details
+        </Link>
+        <Link
+          href={`/events/${event.id}/book`}
+          className="btn-secondary text-sm"
+        >
+          Book Now
+        </Link>
+      </div>
     </div>
   );
 }

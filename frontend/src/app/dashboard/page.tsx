@@ -31,7 +31,6 @@ const DashboardPage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">My Bookings</h1>
         {bookings.length ? (
@@ -48,7 +47,6 @@ const DashboardPage = () => {
           <p>No bookings found.</p>
         )}
       </div>
-      <Footer />
     </>
   );
 };
