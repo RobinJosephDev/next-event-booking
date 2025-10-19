@@ -1,7 +1,5 @@
 "use client";
 
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -17,7 +15,7 @@ export default function EventsPage() {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch("http://localhost:5000/api/events");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`);
       const data = await res.json();
       setEvents(data);
     };

@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 interface Event {
   id: number;
@@ -21,7 +19,9 @@ const EventDetailPage = () => {
   const [event, setEvent] = useState<Event | null>(null);
 
   const fetchEvent = async () => {
-    const res = await fetch(`http://localhost:5000/api/events/${id}`);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}`
+    );
     const data = await res.json();
     setEvent(data);
   };

@@ -1,6 +1,8 @@
 import { Event, LoginResponse, RegisterResponse, Booking } from "../types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
+  "http://localhost:5000/api";
 
 const headers = () => ({
   "Content-Type": "application/json",
@@ -9,11 +11,13 @@ const headers = () => ({
 
 export const getAllEvents = async (): Promise<Event[]> => {
   const res = await fetch(`${API_URL}/events`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch events");
   return res.json();
 };
 
 export const getEventById = async (id: string): Promise<Event> => {
   const res = await fetch(`${API_URL}/events/${id}`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch event");
   return res.json();
 };
 
@@ -26,6 +30,7 @@ export const loginUser = async (
     headers: headers(),
     body: JSON.stringify({ email, password }),
   });
+  if (!res.ok) throw new Error("Login failed");
   return res.json();
 };
 
@@ -39,6 +44,7 @@ export const registerUser = async (
     headers: headers(),
     body: JSON.stringify({ name, email, password }),
   });
+  if (!res.ok) throw new Error("Registration failed");
   return res.json();
 };
 
@@ -51,5 +57,6 @@ export const createBooking = async (
     headers: headers(),
     body: JSON.stringify({ eventId, tickets }),
   });
+  if (!res.ok) throw new Error("Booking failed");
   return res.json();
 };

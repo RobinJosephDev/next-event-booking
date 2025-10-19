@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
 import BookingCard from "../../components/BookingCard";
 
 interface Booking {
@@ -18,7 +16,7 @@ const DashboardPage = () => {
 
   const fetchBookings = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:5000/api/bookings", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();

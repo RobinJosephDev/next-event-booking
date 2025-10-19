@@ -16,7 +16,7 @@ const AdminPage = () => {
   const [events, setEvents] = useState<Event[]>([]);
 
   const fetchEvents = async () => {
-    const res = await fetch("http://localhost:5000/api/events");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`);
     const data = await res.json();
     setEvents(data);
   };
@@ -26,7 +26,7 @@ const AdminPage = () => {
   }, []);
 
   const handleAddEvent = async (data: EventFormData) => {
-    await fetch("http://localhost:5000/api/events", {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
