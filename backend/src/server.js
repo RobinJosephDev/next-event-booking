@@ -11,10 +11,10 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS Configuration
+// ✅ CORS setup
 const allowedOrigins = [
   "https://nexteventbooking.vercel.app",
-  "http://localhost:3000", // local dev
+  "http://localhost:3000",
 ];
 
 app.use(
@@ -32,10 +32,6 @@ app.use(
   })
 );
 
-// Ensure preflight requests are handled
-app.options("/*", cors());
-
-// Middleware
 app.use(express.json());
 
 // Routes
