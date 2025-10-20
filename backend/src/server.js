@@ -15,6 +15,7 @@ const app = express();
 const allowedOrigins = [
   "https://nexteventbooking.vercel.app",
   "http://localhost:3000",
+  "https://nexteventbooking-git-main-robinjo1776-5d95d5ba.vercel.app",
 ];
 
 app.use(
