@@ -33,7 +33,7 @@ app.use(
 );
 
 // Ensure preflight requests are handled
-app.options("*", cors());
+app.options("/*", cors());
 
 // Middleware
 app.use(express.json());
