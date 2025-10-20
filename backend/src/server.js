@@ -8,8 +8,34 @@ import eventRoutes from "./routes/eventRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 
 dotenv.config();
+
 const app = express();
-app.use(cors());
+
+// ✅ CORS Configuration
+const allowedOrigins = [
+  "https://nexteventbooking.vercel.app",
+  "http://localhost:3000", // local dev
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// Ensure preflight requests are handled
+app.options("*", cors());
+
+// Middleware
 app.use(express.json());
 
 // Routes
