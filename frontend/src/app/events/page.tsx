@@ -8,6 +8,13 @@ import { Event } from "@/types";
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+
+  // Fetch token from localStorage (client-side only)
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
 
   // Fetch all events
   const fetchEvents = async () => {
@@ -25,52 +32,58 @@ export default function EventsPage() {
   }, []);
 
   // Handle adding a new event
-const handleAddEvent = async (data: EventFormData) => {
-  const token = localStorage.getItem("token"); // get token
-  if (!token) {
-    alert("You must be logged in to add events.");
-    return;
-  }
-
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`, // include token
-      },
-      body: JSON.stringify(data),
-    });
-
-    const newEvent: Event = await res.json();
-
-    if (res.ok) {
-      alert("Event added successfully!");
-      setEvents((prev) => [...prev, newEvent]);
-      setShowForm(false);
-    } else {
-      alert(newEvent?.title || "Failed to add event.");
+  const handleAddEvent = async (data: EventFormData) => {
+    if (!token) {
+      alert("You must be logged in to add events.");
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong.");
-  }
-};
 
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      const newEvent: Event = await res.json();
+
+      if (res.ok) {
+        alert("Event added successfully!");
+        setEvents((prev) => [...prev, newEvent]); // update state
+        setShowForm(false); // hide form
+      } else {
+        alert(newEvent?.title || "Failed to add event.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    }
+  };
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">All Events</h1>
 
-      {/* Toggle Add Event Form */}
-      <button
-        className="mb-6 bg-green-600 text-white px-4 py-2 rounded"
-        onClick={() => setShowForm(!showForm)}
-      >
-        {showForm ? "Cancel" : "Add Event"}
-      </button>
+      {/* Show form toggle only if user is logged in */}
+      {token ? (
+        <>
+          <button
+            className="mb-6 bg-green-600 text-white px-4 py-2 rounded"
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? "Cancel" : "Add Event"}
+          </button>
 
-      {showForm && <EventForm onSubmit={handleAddEvent} />}
+          {showForm && <EventForm onSubmit={handleAddEvent} />}
+        </>
+      ) : (
+        <p className="text-center text-red-600 mb-6">
+          You must be logged in to add events.
+        </p>
+      )}
 
       {/* Event List */}
       {events.length ? (
