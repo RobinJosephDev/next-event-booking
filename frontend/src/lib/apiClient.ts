@@ -12,7 +12,16 @@ const headers = () => ({
 export const getAllEvents = async (): Promise<Event[]> => {
   const res = await fetch(`${API_URL}/events`, { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to fetch events");
-  return res.json();
+
+  const data: Event[] = await res.json();
+
+  // Filter upcoming events (today or later)
+  const upcoming = data.filter((event) => new Date(event.date) >= new Date());
+
+  // Sort by descending date (newest first)
+  return upcoming.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 };
 
 export const getEventById = async (id: string): Promise<Event> => {
