@@ -10,10 +10,11 @@ export default function EventsPage() {
   const [showForm, setShowForm] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
-  // Fetch token from localStorage (client-side only)
+  // Get token from localStorage (client-side only)
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
+    setToken(storedToken || null);
+    console.log("Token loaded:", storedToken); // debug
   }, []);
 
   // Fetch all events
@@ -31,7 +32,7 @@ export default function EventsPage() {
     fetchEvents();
   }, []);
 
-  // Handle adding a new event
+  // Add new event
   const handleAddEvent = async (data: EventFormData) => {
     if (!token) {
       alert("You must be logged in to add events.");
@@ -52,8 +53,8 @@ export default function EventsPage() {
 
       if (res.ok) {
         alert("Event added successfully!");
-        setEvents((prev) => [...prev, newEvent]); // update state
-        setShowForm(false); // hide form
+        setEvents((prev) => [...prev, newEvent]);
+        setShowForm(false);
       } else {
         alert(newEvent?.title || "Failed to add event.");
       }
@@ -67,7 +68,7 @@ export default function EventsPage() {
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">All Events</h1>
 
-      {/* Show form toggle only if user is logged in */}
+      {/* Show Add Event form only if logged in */}
       {token ? (
         <>
           <button
@@ -85,7 +86,7 @@ export default function EventsPage() {
         </p>
       )}
 
-      {/* Event List */}
+      {/* Event list */}
       {events.length ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {events.map((event) => (
