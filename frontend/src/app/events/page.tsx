@@ -13,18 +13,19 @@ export default function EventsPage() {
   const [token, setToken] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Get token from localStorage (client-side only)
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken || null);
   }, []);
 
-  // Fetch all events
   const fetchEvents = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`);
       const data: Event[] = await res.json();
-      setEvents(data);
+      const sorted = data.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      setEvents(sorted);
     } catch (err) {
       console.error("Failed to fetch events:", err);
     }
@@ -34,7 +35,6 @@ export default function EventsPage() {
     fetchEvents();
   }, []);
 
-  // Add new event
   const handleAddEvent = async (data: EventFormData) => {
     if (!token) {
       alert("You must be logged in to add events.");
@@ -55,9 +55,13 @@ export default function EventsPage() {
 
       if (res.ok) {
         alert("Event added successfully!");
-        setEvents((prev) => [...prev, newEvent]);
+        setEvents((prev) =>
+          [...prev, newEvent].sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          )
+        );
         setShowForm(false);
-        setCurrentPage(Math.ceil((events.length + 1) / RECORDS_PER_PAGE)); // jump to last page
+        setCurrentPage(1); // newest event is first
       } else {
         alert(newEvent?.title || "Failed to add event.");
       }
@@ -67,7 +71,7 @@ export default function EventsPage() {
     }
   };
 
-  // Pagination calculations
+  // Pagination
   const totalPages = Math.ceil(events.length / RECORDS_PER_PAGE);
   const startIndex = (currentPage - 1) * RECORDS_PER_PAGE;
   const paginatedEvents = events.slice(
@@ -79,7 +83,6 @@ export default function EventsPage() {
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center">All Events</h1>
 
-      {/* Show Add Event form only if logged in */}
       {token ? (
         <>
           <button
@@ -88,7 +91,6 @@ export default function EventsPage() {
           >
             {showForm ? "Cancel" : "Add Event"}
           </button>
-
           {showForm && <EventForm onSubmit={handleAddEvent} />}
         </>
       ) : (
@@ -97,7 +99,6 @@ export default function EventsPage() {
         </p>
       )}
 
-      {/* Event list */}
       {paginatedEvents.length ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {paginatedEvents.map((event) => (
@@ -122,7 +123,6 @@ export default function EventsPage() {
         <p className="text-center text-gray-500 mt-10">No events found.</p>
       )}
 
-      {/* Pagination controls */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-4 mt-6">
           <button
