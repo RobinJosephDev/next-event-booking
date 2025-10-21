@@ -5,16 +5,18 @@ import Link from "next/link";
 import EventForm, { EventFormData } from "@/components/EventForm";
 import { Event } from "@/types";
 
+const RECORDS_PER_PAGE = 9;
+
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [token, setToken] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Get token from localStorage (client-side only)
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken || null);
-    console.log("Token loaded:", storedToken); // debug
   }, []);
 
   // Fetch all events
@@ -55,6 +57,7 @@ export default function EventsPage() {
         alert("Event added successfully!");
         setEvents((prev) => [...prev, newEvent]);
         setShowForm(false);
+        setCurrentPage(Math.ceil((events.length + 1) / RECORDS_PER_PAGE)); // jump to last page
       } else {
         alert(newEvent?.title || "Failed to add event.");
       }
@@ -63,6 +66,14 @@ export default function EventsPage() {
       alert("Something went wrong.");
     }
   };
+
+  // Pagination calculations
+  const totalPages = Math.ceil(events.length / RECORDS_PER_PAGE);
+  const startIndex = (currentPage - 1) * RECORDS_PER_PAGE;
+  const paginatedEvents = events.slice(
+    startIndex,
+    startIndex + RECORDS_PER_PAGE
+  );
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -87,9 +98,9 @@ export default function EventsPage() {
       )}
 
       {/* Event list */}
-      {events.length ? (
+      {paginatedEvents.length ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-          {events.map((event) => (
+          {paginatedEvents.map((event) => (
             <Link
               key={event.id}
               href={`/events/${event.id}`}
@@ -109,6 +120,31 @@ export default function EventsPage() {
         </div>
       ) : (
         <p className="text-center text-gray-500 mt-10">No events found.</p>
+      )}
+
+      {/* Pagination controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-6">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       )}
     </div>
   );
