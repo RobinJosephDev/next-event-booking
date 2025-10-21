@@ -12,9 +12,12 @@ interface Event {
   capacity: number;
 }
 
+const RECORDS_PER_PAGE = 8;
+
 const AdminPage = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [token, setToken] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Load token from localStorage (client-side only)
   useEffect(() => {
@@ -49,7 +52,7 @@ const AdminPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // send token for auth
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
@@ -57,6 +60,7 @@ const AdminPage = () => {
       if (res.ok) {
         alert("Event added successfully!");
         fetchEvents();
+        setCurrentPage(Math.ceil((events.length + 1) / RECORDS_PER_PAGE)); // jump to last page
       } else {
         const errorData = await res.json();
         alert(errorData.message || "Failed to add event.");
@@ -71,10 +75,20 @@ const AdminPage = () => {
     return (
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-        <p className="text-red-600">You must be logged in to access this page.</p>
+        <p className="text-red-600">
+          You must be logged in to access this page.
+        </p>
       </div>
     );
   }
+
+  // Pagination calculations
+  const totalPages = Math.ceil(events.length / RECORDS_PER_PAGE);
+  const startIndex = (currentPage - 1) * RECORDS_PER_PAGE;
+  const paginatedEvents = events.slice(
+    startIndex,
+    startIndex + RECORDS_PER_PAGE
+  );
 
   return (
     <div className="p-4">
@@ -85,13 +99,38 @@ const AdminPage = () => {
 
       <h2 className="text-xl font-semibold mt-8 mb-2">All Events</h2>
       <div className="space-y-2">
-        {events.map((event) => (
+        {paginatedEvents.map((event) => (
           <div key={event.id} className="border p-2 rounded">
             {event.title} - {event.date} - {event.venue} - ${event.price} -
             Capacity: {event.capacity}
           </div>
         ))}
       </div>
+
+      {/* Pagination controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
