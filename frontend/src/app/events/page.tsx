@@ -25,28 +25,38 @@ export default function EventsPage() {
   }, []);
 
   // Handle adding a new event
-  const handleAddEvent = async (data: EventFormData) => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+const handleAddEvent = async (data: EventFormData) => {
+  const token = localStorage.getItem("token"); // get token
+  if (!token) {
+    alert("You must be logged in to add events.");
+    return;
+  }
 
-      const newEvent: Event = await res.json();
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`, // include token
+      },
+      body: JSON.stringify(data),
+    });
 
-      if (res.ok) {
-        alert("Event added successfully!");
-        setEvents((prev) => [...prev, newEvent]); // add new event to state
-        setShowForm(false); // hide form
-      } else {
-        alert(newEvent?.title || "Failed to add event.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong.");
+    const newEvent: Event = await res.json();
+
+    if (res.ok) {
+      alert("Event added successfully!");
+      setEvents((prev) => [...prev, newEvent]);
+      setShowForm(false);
+    } else {
+      alert(newEvent?.title || "Failed to add event.");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong.");
+  }
+};
+
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
