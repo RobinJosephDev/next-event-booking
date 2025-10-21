@@ -1,8 +1,9 @@
 import { Event, LoginResponse, RegisterResponse, Booking } from "../types";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") + "/api" ||
   "http://localhost:5000/api";
+
 
 const headers = () => ({
   "Content-Type": "application/json",
