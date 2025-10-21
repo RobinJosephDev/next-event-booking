@@ -16,11 +16,29 @@ const DashboardPage = () => {
 
   const fetchBookings = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    setBookings(data);
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/bookings`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!res.ok) {
+        console.error("Failed to fetch bookings", res.status);
+        return;
+      }
+
+      const data = await res.json();
+      setBookings(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
