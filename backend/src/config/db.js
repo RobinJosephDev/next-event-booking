@@ -1,18 +1,23 @@
 import pkg from "pg";
 const { Pool } = pkg;
 
+// Use DATABASE_URL always if it exists
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  console.error("❌ DATABASE_URL is not defined!");
+}
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-    ? process.env.DATABASE_URL
-    : `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-  ssl: process.env.DATABASE_URL
-    ? { rejectUnauthorized: false }
-    : false,
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false, // Required for Render Postgres external URL
+  },
 });
 
 pool
   .connect()
   .then(() => console.log("✅ Database connected successfully"))
-  .catch((err) => console.error("❌ Database connection error:", err));
+  .catch((err) => console.error("❌ Database connection error:", err.stack));
 
 export default pool;
