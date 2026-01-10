@@ -7,21 +7,28 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+    {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include", // ✅ critical
       body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      localStorage.setItem("token", data.token);
-      router.push("/dashboard");
-    } else {
-      alert(data.message);
     }
-  };
+  );
+
+  const data = await res.json();
+
+  if (res.ok) {
+    router.push("/dashboard"); // ✅ works
+  } else {
+    alert(data.message || "Login failed");
+  }
+};
+
 
   return (
     <>
