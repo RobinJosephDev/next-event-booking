@@ -1,13 +1,27 @@
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
+
 import pkg from "pg";
 const { Pool } = pkg;
 
+console.log("DB_USER =", process.env.DB_USER);
+console.log("DB_PASSWORD =", process.env.DB_PASSWORD);
+console.log("DB_PASSWORD type =", typeof process.env.DB_PASSWORD);
+console.log("DB_HOST =", process.env.DB_HOST);
+console.log("DB_NAME =", process.env.DB_NAME);
+
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  database: process.env.DB_NAME,
 });
 
 pool
   .connect()
   .then(() => console.log("✅ Database connected successfully"))
-  .catch((err) => console.error("❌ Database connection error:", err.stack));
+  .catch((err) => console.error("❌ Database connection error:", err));
 
 export default pool;
