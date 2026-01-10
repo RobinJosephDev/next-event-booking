@@ -1,18 +1,8 @@
 import pkg from "pg";
 const { Pool } = pkg;
 
-// Use DATABASE_URL always if it exists
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-  console.error("❌ DATABASE_URL is not defined!");
-}
-
 const pool = new Pool({
-  connectionString,
-  ssl: {
-    rejectUnauthorized: false, // Required for Render Postgres external URL
-  },
+  connectionString: process.env.DATABASE_URL,
 });
 
 pool
