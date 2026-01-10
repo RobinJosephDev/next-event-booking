@@ -11,17 +11,15 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS setup
-const allowedOrigins = [
-  "https://nexteventbooking.vercel.app",
-  "http://localhost:3000",
-  "https://nexteventbooking-git-main-robinjo1776-5d95d5ba.vercel.app",
-];
-
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        origin === "http://localhost:3000" ||
+        origin === "https://nexteventbooking.vercel.app" ||
+        origin.endsWith(".vercel.app")
+      ) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
@@ -32,6 +30,9 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// ✅ PRE-FLIGHT FIX
+app.options("*", cors());
 
 app.use(express.json());
 
