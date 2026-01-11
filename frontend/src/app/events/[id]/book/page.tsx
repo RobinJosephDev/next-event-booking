@@ -11,34 +11,43 @@ export default function BookEventPage() {
 
   const [tickets, setTickets] = useState(1);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!id) return;
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!id) return;
 
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  if (!token) {
+    toast.error("User not logged in");
+    return;
+  }
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings`, {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/events/${id}/book`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          event_id: id,
           tickets_booked: tickets,
         }),
-      });
+      }
+    );
 
-      if (!res.ok) throw new Error("Booking failed");
+    if (!res.ok) throw new Error("Booking failed");
 
-      toast.success("Booking successful! 🎉");
-      router.push("/");
-    } catch (err) {
-      toast.error("Failed to book event. Please try again.");
-      console.error(err);
-    }
-  };
+    toast.success("Booking successful! 🎉");
+    router.push("/");
+  } catch (err) {
+    toast.error("Failed to book event. Please try again.");
+    console.error(err);
+  }
+};
+
+
+
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow mt-10">
