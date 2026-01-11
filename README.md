@@ -14,9 +14,7 @@ A fullstack event booking platform where users can browse, book, and manage tick
 - **Notifications:** React Hot Toast  
 - **Deployment:**  
   - Frontend → Vercel  
-  - Backend → Railway / Render / AWS  
-  - Database → Supabase / ElephantSQL  
-
+  - Backend → Render
 ---
 
 ## 🔥 Key Features
