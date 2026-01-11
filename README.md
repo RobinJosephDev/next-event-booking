@@ -55,14 +55,6 @@ Live App: [https://mern-resort-booking.vercel.app/](https://nexteventbooking.ver
 
 ---
 
-## 📸 Screenshots / Demo
-- **Homepage:** List of upcoming events  
-- **Event Details:** Event description and "Book Now" button  
-- **Booking Flow:** User can select tickets and see confirmation toast  
-- **Admin Dashboard:** Event management and booking analytics  
-
----
-
 ## 🚀 Deployment
 - **Frontend:** Live on Vercel  
 - **Backend API:** Live Render  
