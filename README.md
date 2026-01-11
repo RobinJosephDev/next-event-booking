@@ -63,8 +63,8 @@ A fullstack event booking platform where users can browse, book, and manage tick
 
 ## 🚀 Deployment
 - **Frontend:** Live on Vercel  
-- **Backend API:** Live API  
-- **Database:** Hosted on Supabase / ElephantSQL  
+- **Backend API:** Live Render  
+- **Database:** Hosted on Render 
 
 ---
 
