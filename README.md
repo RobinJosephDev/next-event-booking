@@ -1,7 +1,7 @@
 # Event Booking & Management Platform
 
 A fullstack event booking platform where users can browse, book, and manage tickets, and admins can oversee events, bookings, and analytics. Built with modern technologies and best practices in fullstack development.
-
+Live App: [https://mern-resort-booking.vercel.app/](https://nexteventbooking.vercel.app/)
 ---
 
 ## 🛠 Tech Stack
