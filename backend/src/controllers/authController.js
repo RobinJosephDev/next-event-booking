@@ -20,16 +20,39 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
+    console.log("LOGIN HIT");
+
     const { email, password } = req.body;
+    console.log("Request Body:", req.body);  // Log incoming data
+
+    console.log("Finding user...");
     const user = await findUserByEmail(email);
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    console.log("User result:", user);
 
+    if (!user) {
+      console.log("User not found");
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    console.log("Comparing password...");
     const match = await comparePassword(password, user.password_hash);
-    if (!match) return res.status(401).json({ message: "Invalid credentials" });
+    console.log("Password match:", match);
 
+    if (!match) {
+      console.log("Password mismatch");
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    console.log("Generating token...");
     const token = generateToken(user);
+    console.log("Token generated:", token);
+
     res.json({ user, token });
   } catch (err) {
+    console.log("ERROR IN LOGIN:", err);
     next(err);
   }
 };
+
+
+

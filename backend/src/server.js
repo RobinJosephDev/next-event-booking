@@ -15,22 +15,36 @@ dotenv.config();
 const app = express();
 const apiRouter = express.Router();
 
+// --- LOGGER MUST BE FIRST AFTER APP ---
+app.use((req, res, next) => {
+  console.log("📌 Incoming:", req.method, req.url);
+  next();
+});
+
 // ✅ CORS must be BEFORE routes
 app.use(
   cors({
-    origin: ["http://localhost:3000"], // add your frontend URL here
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
 
 app.use(express.json());
 
+// HEALTH CHECK
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
+
+// API ROUTES
 apiRouter.use("/auth", authRoutes);
 apiRouter.use("/users", userRoutes);
 apiRouter.use("/events", eventRoutes);
 apiRouter.use("/bookings", bookingRoutes);
 
 app.use("/api", apiRouter);
+
+// ERROR HANDLER LAST
 app.use(errorHandler);
 
 // --- MANUALLY REGISTER ROUTES ---
@@ -47,4 +61,7 @@ routeTracker.add("/api/bookings/:id", ["GET", "PUT", "DELETE"]);
 console.log("ROUTES:", routeTracker.routes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.listen(PORT, "127.0.0.1", () => {
+  console.log(`Server running on http://127.0.0.1:${PORT}`);
+});

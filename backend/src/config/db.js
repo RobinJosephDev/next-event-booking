@@ -14,12 +14,15 @@ const pool = new Pool({
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT, 10),
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD, // now guaranteed string
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  connectionTimeoutMillis: 5000,
+  statement_timeout: 5000,
   ssl: process.env.NODE_ENV === "production"
     ? { rejectUnauthorized: false }
     : false,
 });
+
 
 pool
   .connect()
