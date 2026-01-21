@@ -1,10 +1,13 @@
-"use client"; // must be at the top for client-side page
+"use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "../../context/AuthContext";
 
 const LoginPage = () => {
   const router = useRouter();
+  const { login } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,26 +15,11 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json(); // ✅ only once
-
-      if (res.ok) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
-        router.push("/dashboard");
-      } else {
-        alert(data.message || "Login failed");
-      }
+      await login(email, password);
+      router.push("/dashboard");
     } catch (err) {
       console.error("Login error", err);
-      alert("Something went wrong");
+      alert("Login failed");
     }
   };
 
@@ -66,5 +54,4 @@ const LoginPage = () => {
   );
 };
 
-// ✅ Make sure this is **default export**
 export default LoginPage;
