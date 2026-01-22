@@ -8,7 +8,6 @@ interface Booking {
   title: string;
   date: string;
   tickets_booked: number;
-  status?: string; // optional
 }
 
 const DashboardPage = () => {
@@ -39,7 +38,7 @@ const DashboardPage = () => {
       );
 
       if (!res.ok) {
-        console.error("Failed to fetch bookings", res.status);
+        console.error("Failed to fetch bookings");
         setLoading(false);
         return;
       }
@@ -73,7 +72,6 @@ const DashboardPage = () => {
               eventTitle={b.title}
               eventDate={new Date(b.date).toLocaleDateString()}
               ticketsBooked={b.tickets_booked}
-              status={b.status || "Pending"} // fallback if missing
             />
           ))}
         </div>
