@@ -15,6 +15,8 @@ const pool = new Pool({
   ssl: {
     rejectUnauthorized: false,
   },
+  // Force IPv4
+  family: 4,
 });
 
 pool
