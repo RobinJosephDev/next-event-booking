@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import pool from "./db.js";     // Postgres connection
+import pool from "./config/db.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 
 import authRoutes from "./routes/authRoutes.js";

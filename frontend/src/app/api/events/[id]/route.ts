@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server";
 import pool from "@/config/db";
 
-export async function GET(
-  req: Request,
-  context: { params: { id: string } } // context object
-) {
-  // Unwrap params properly
-  const params = await context.params; // ✅ unwrap params if it's a Promise
-  const id = params.id;
+export async function GET(req: Request, context: { params: { id: string } }) {
+  const id = context.params.id; // no await needed
 
   try {
     const result = await pool.query("SELECT * FROM events WHERE id = $1", [id]);
@@ -21,7 +16,7 @@ export async function GET(
     console.error("Error fetching event:", err);
     return NextResponse.json(
       { message: "Failed to fetch event" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
