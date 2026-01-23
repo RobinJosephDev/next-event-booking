@@ -4,25 +4,18 @@ dotenv.config();
 import pkg from "pg";
 const { Pool } = pkg;
 
-console.log(
-  "DB_PASSWORD:",
-  process.env.DB_PASSWORD,
-  typeof process.env.DB_PASSWORD
-);
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is missing");
+}
 
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT, 10),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  connectionTimeoutMillis: 5000,
-  statement_timeout: 5000,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : false,
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
-
 
 pool
   .connect()
